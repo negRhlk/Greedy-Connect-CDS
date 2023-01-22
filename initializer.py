@@ -36,7 +36,7 @@ y = []
 
 # The size of the environment that the network nodes are spread in it, 
 # in this case, is 25*25 meters
-ENVIRONMENT = 120
+ENVIRONMENT = 25
 
 # -----------------------------------------------------------------------------
 # The radius of the node communication range
@@ -286,31 +286,40 @@ for nod in grey_nodes:
 # ----------------- Connecting the Dominating Set - Phase 2 -----------------
 for u in nodes:
     if u.COLOR == "grey":
-        highU = -1
-        highV = -1
-
         for i in u.neighbors:
             if nodes[i].COLOR == "grey":
-                print(u.ID, i)
+                highU = -1
+                highV = -1
 
-                # for j in nodes[i].neighbors:
-                #     if nodes[j].component > highV:
-                #         highV = nodes[j].component
+                for j in u.neighbors:
+                    if nodes[j].component > highU:
+                        highU = nodes[j].component
 
-                # print(highNod, highI)
-                #
-                # if highI != highNod:
-                #     if highI > highNod:
-                #         nod.component = highI
-                #         nodes[i].component = highI
-                #     else:
-                #         nod.component = highNod
-                #         nodes[i].component = highNod
-                #
-                #     nod.COLOR = "black"
-                #     nodes[i].COLOR = "black"
-#
-#                 break
+                for j in nodes[i].neighbors:
+                    if nodes[j].component > highV:
+                        highV = nodes[j].component
+
+                if highU != highV:
+                    # print('u: ', u.ID, 'highU: ', highU)
+                    # print('v: ', nodes[i].ID, 'highV: ', highV)
+                    # print("----------------------")
+
+                    u.COLOR = "black"
+                    nodes[i].COLOR = "black"
+
+                    u.component = max([highU, highV])
+                    nodes[i].component = max([highU, highV])
+                break
+            break
+
+# for i in range(NUMBER_NODES):
+    # if nodes[NUMBER_NODES - 1 - i].COLOR == "black":
+    #     for j in nodes[NUMBER_NODES - 1 - i].neighbors:
+    #         if nodes[j].component > nodes[NUMBER_NODES - 1 - i].component:
+    #             nodes[NUMBER_NODES - 1 - i].component = nodes[j].component
+    #         else:
+    #             nodes[j].component = nodes[NUMBER_NODES - 1 - i].component
+    # print(nodes[NUMBER_NODES - 1 - i].ID, ':', nodes[NUMBER_NODES - 1 - i].component)
 
 # --------------------------- Plot Network Topology ---------------------------
 # print(nx.info(Gar))
