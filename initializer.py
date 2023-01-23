@@ -30,13 +30,13 @@ global nodes, Center_node, Center_node_static, Show_progress_interval, Show_prog
 # -----------------------------------------------------------------------------
 # ----------------------------- initial settings -------------------------------
 # --------------------------- deployment setting ------------------------------
-NUMBER_NODES = 10  # the number of nodes in the network
+NUMBER_NODES = 200  # the number of nodes in the network
 x = []  # the positions of nodes in the network
 y = []
 
 # The size of the environment that the network nodes are spread in it, 
 # in this case, is 25*25 meters
-ENVIRONMENT = 25
+ENVIRONMENT = 120
 
 # -----------------------------------------------------------------------------
 # The radius of the node communication range
@@ -47,7 +47,7 @@ Relay_Node = []
 Relay_G_Node = []
 
 # -----------------------------------------------------------------------------
-random_network = 1
+random_network = 0
 
 # Random topology
 if random_network == 0:
@@ -320,7 +320,11 @@ for u in nodes:
     #         else:
     #             nodes[j].component = nodes[NUMBER_NODES - 1 - i].component
     # print(nodes[NUMBER_NODES - 1 - i].ID, ':', nodes[NUMBER_NODES - 1 - i].component)
+for i in range(NUMBER_NODES):
+    if nodes[i].COLOR == "black":
+        Relay_Node.append(nodes[i].ID)
 
+print(Relay_Node)
 # --------------------------- Plot Network Topology ---------------------------
 # print(nx.info(Gar))
 fig = figure()  # it is possible to use figsize=(num, num)
