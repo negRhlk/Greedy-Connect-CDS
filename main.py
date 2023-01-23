@@ -179,7 +179,6 @@ for nod in nodes:
             nod.component = max(node_black_nbr)
     # print(nod.ID, ':', nod.component)
 
-# I HAVE A QUESTION!
 # for i in range(NUMBER_NODES):
 #     if nodes[NUMBER_NODES - 1 - i].COLOR == "black":
 #         for j in nodes[NUMBER_NODES - 1 - i].neighbors:
@@ -210,7 +209,6 @@ for nod in grey_nodes:
 # for i in range(NUMBER_NODES):
 #     print(nodes[i].ID, ':', nodes[i].component)
 
-# I HAVE A QUESTION!
 # for i in range(NUMBER_NODES):
 #     if nodes[NUMBER_NODES - 1 - i].COLOR == "black":
 #         for j in nodes[NUMBER_NODES - 1 - i].neighbors:
