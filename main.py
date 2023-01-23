@@ -1,8 +1,3 @@
-"""
-The setting of the network is determined in this file.
-For plugging in static models and using static algorithms in the network design-time you can use the initializer.py file
-"""
-
 import random
 import networkx as nx
 import numpy as np
@@ -15,17 +10,10 @@ from pylab import plot, show, savefig, xlim, figure, \
     ylim, legend, boxplot, setp, axes
 
 # ---------------------------- global variables -------------------------------
-global update_mobility_interval, lowpower_Poll_interval
-global BUFFER_SIZE, reception_ratio
-global NUMBER_NODES, ENVIRONMENT, NUMBER_RELAY_NODE, NUMBER_RELAY_G_NODE
-global heartbeat_log, logger, energy_log, mobility_flag, R_h, x, y, next_update, Relay_Node, Relay_G_Node
-global NETWORK_TTL, PACKET_LENGTH, EXECUTION_TIME, TOTAL_LOG, BYTE, DATA_RATE, SCAN_STEP, SWITCH_TIME
-global Advertise_time, Receive_Delay, sleep_time, Receive_window, destination, max_seq
-global GENERATION_EVENT_Adv37, HEARTBEAT_EVENT_Adv37, RELAY_EVENT_Adv37, AD38_EVENT, AD39_EVENT, AD39_EVENT_End
-global SCAN37_EVENT, SCAN38_EVENT, SCAN39_EVENT, SCAN37_C_EVENT, SCAN38_C_EVENT, SCAN39_C_EVENT, SWITCH_37TO38
-global SWITCH_38TO39, SEND_POLL, FRIEND_RELAY, NODE_TIME, NODE_EVENT, Time, i_node
-global SINK_NODE, JUST_RELAY, JUST_GENERATION, RELAY_AND_GENERATION, LOW_POWER, FRIEND_RELAY_NODE, FRIEND_NODE
-global nodes, Center_node, Center_node_static, Show_progress_interval, Show_progress
+global NUMBER_NODES, ENVIRONMENT
+global x, y, Relay_Node
+global i_node
+global nodes
 
 # -----------------------------------------------------------------------------
 # ----------------------------- initial settings -------------------------------
@@ -44,22 +32,12 @@ NODE_RANGE = 11.26
 
 Gar = nx.Graph()
 Relay_Node = []
-Relay_G_Node = []
 
 # -----------------------------------------------------------------------------
 random_network = 0
 
 # Random topology
 if random_network == 0:
-
-    # x = [16, 22, 2, 3, 12, 7, 19, 1, 23, 17, 4, 7, 21, 3, 20, 13, 15, 16, 5, 8, 6, 22, 5, 11, 18, 20, 6, 2, 5, 1, 5, 4,
-    #      23, 6, 19, 5, 4, 6, 10, 6, 18, 2, 2, 5, 16, 25, 9, 14, 13, 8, 3, 5, 1, 10, 22, 3, 8, 9, 22, 5, 14, 25, 12, 1,
-    #      4, 3, 1, 19, 22, 22, 19, 9, 22, 25, 25, 14, 11, 6, 9, 12, 23, 4, 9, 21, 1, 20, 21, 10, 6, 10, 14, 6, 18, 23, 5,
-    #      12, 15, 12, 9, 2]
-    # y = [7, 24, 21, 18, 14, 24, 17, 20, 5, 20, 12, 12, 15, 12, 1, 1, 20, 8, 15, 3, 25, 8, 12, 5, 9, 15, 23, 1, 24, 11,
-    #      4, 23, 13, 13, 4, 24, 13, 16, 23, 16, 6, 24, 6, 14, 18, 21, 6, 22, 12, 6, 5, 21, 3, 7, 19, 19, 13, 8, 13, 6, 7,
-    #      20, 22, 3, 24, 10, 7, 5, 2, 4, 16, 1, 13, 16, 13, 12, 12, 15, 21, 3, 16, 19, 2, 4, 6, 21, 4, 2, 16, 22, 12, 17,
-    #      3, 22, 19, 5, 10, 21, 7, 16]
 
     # 200 nodes in 120 * 120 environment
     x = [17, 9, 59, 22, 62, 16, 62, 29, 55, 79, 22, 33, 41, 1, 79, 48, 65, 33, 66, 72, 37, 14, 59, 3, 70, 20, 73, 21,
@@ -92,59 +70,16 @@ else:
 nodes = []
 
 for i1 in range(NUMBER_NODES):
-    # the positions of the nodes adds to them
+    # the positions of the nodes is added to them
     nodes.append(node(i1, x[i1], y[i1]))
     # the positions of the nodes add to the network topology
     Gar.add_node(nodes[i1].ID, pos=(nodes[i1].Xposition, nodes[i1].Yposition))
 
-# ----------------------------- Statice Algorithms ----------------------------
 # ------------------------------ Detect Neighbour -----------------------------
 # by calling the detect_neighbour function the neighbors of each node is determined
 for node_source in range(NUMBER_NODES):
     neighbor = detect_neighbor(node_source, NODE_RANGE, NUMBER_NODES, nodes, Gar)
     nodes[node_source].neighbors = neighbor
-
-# print(nodes[8].neighbors)
-# ----------------------------- Relay Node Selection -----------------------------
-
-# # Dividing nodes into 16 groups based on their position
-# divs = dict()
-# steps = 10
-# for i in range(NUMBER_NODES):
-#     divs[i] = []
-#
-# for i in range(0, ENVIRONMENT + 1, steps):
-#     for k in range(NUMBER_NODES):
-#         if i <= nodes[k].Xposition < i + steps:
-#             divs[i].append(nodes[k].ID)
-#
-# divs_list = []
-#
-# for key in divs:
-#     if divs[key] != []:
-#         divs_list.append(divs[key])
-#
-#
-# # Creating a 2D list with the length of len(div_list) * len(div_list)
-# new_list_div = []
-# for i in range(len(divs_list)):
-#     new_list_div.append([])
-#     for j in range(len(divs_list)):
-#         new_list_div[i].append([])
-#
-# for i in range(len(new_list_div)):
-#     for m in range(len(divs_list[i])):
-#         for k in range(0, ENVIRONMENT + 1, steps):
-#             if k <= nodes[m].Yposition < k + steps:
-#                 index = k // steps
-#                 new_list_div[i][index].append(nodes[m].ID)
-#
-# count = 0
-# for i in range(len(new_list_div)):
-#     for j in range(len(new_list_div[i])):
-#         count += len(new_list_div[i][j])
-# print(count)
-# print(new_list_div)
 
 # -------------------------- Connected Dominating Set -------------------------
 
@@ -320,6 +255,8 @@ for u in nodes:
     #         else:
     #             nodes[j].component = nodes[NUMBER_NODES - 1 - i].component
     # print(nodes[NUMBER_NODES - 1 - i].ID, ':', nodes[NUMBER_NODES - 1 - i].component)
+
+# -------------------------- Printing Dominator Nodes ------------------------    
 for i in range(NUMBER_NODES):
     if nodes[i].COLOR == "black":
         Relay_Node.append(nodes[i].ID)
@@ -336,4 +273,4 @@ for i in range(len(Gar.nodes)):
 
 nx.draw(Gar, pos=pos, with_labels=True, node_color=color)
 plt.savefig('topology.png', dpi=200, bbox_inches='tight')
-# plt.show()
+
